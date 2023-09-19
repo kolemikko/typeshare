@@ -96,6 +96,9 @@ macro_rules! output_file_for_ident {
     (go) => {
         "output.go"
     };
+    (csharp) => {
+        "output.cs"
+    };
 }
 
 /// Simplifies the construction of `Language` instances for each language.
@@ -192,6 +195,21 @@ macro_rules! language_instance {
     (typescript {$($field:ident: $val:expr),* $(,)?}) => {
         #[allow(clippy::needless_update)]
         Box::new(typeshare_core::language::TypeScript {
+            no_version_header: true,
+            $($field: $val,)*
+            ..Default::default()
+        })
+    };
+
+    // Default Csharp
+    (csharp) => {
+        language_instance!(csharp { })
+    };
+
+    // csharp with configuration fields forwarded
+    (csharp {$($field:ident: $val:expr),* $(,)?}) => {
+        #[allow(clippy::needless_update)]
+        Box::new(typeshare_core::language::Csharp {
             no_version_header: true,
             $($field: $val,)*
             ..Default::default()
@@ -380,7 +398,7 @@ tests! {
         },
         kotlin,
         scala,
-        typescript
+        typescript,
     ];
     can_generate_generic_type_alias: [
         swift {
@@ -388,11 +406,11 @@ tests! {
         },
         kotlin,
         scala,
-        typescript
+        typescript,
     ];
     can_generate_slice_of_user_type: [swift, kotlin, scala, typescript, go];
     can_generate_readonly_fields: [
-        typescript
+        typescript, csharp
     ];
     can_generate_simple_enum: [
         swift {
@@ -401,6 +419,7 @@ tests! {
         kotlin,
         scala,
         typescript,
+    csharp,
         go
     ];
     can_generate_bare_string_enum: [swift, kotlin, scala, typescript, go ];
@@ -446,7 +465,7 @@ tests! {
     can_override_types: [swift, kotlin, scala, typescript, go];
 
     /// Structs
-    can_generate_simple_struct_with_a_comment: [kotlin, swift, typescript, scala,  go];
+    can_generate_simple_struct_with_a_comment: [kotlin, swift, typescript, csharp, scala, go];
     generate_types: [kotlin, swift, typescript, scala,  go];
     can_handle_serde_rename: [
         swift {
@@ -523,9 +542,9 @@ tests! {
         },
     ];
     can_handle_serde_rename_all: [swift, kotlin, scala,  typescript, go];
-    can_handle_serde_rename_on_top_level: [swift { prefix: "OP".to_string(), }, kotlin, scala,  typescript, go];
+    can_handle_serde_rename_on_top_level: [swift { prefix: "OP".to_string(), }, kotlin, scala, typescript, go];
     can_generate_unit_structs: [swift, kotlin, scala, typescript, go];
-    kebab_case_rename: [swift, kotlin, scala,  typescript, go];
+    kebab_case_rename: [swift, kotlin, scala, typescript, csharp, go];
 
     /// Globals get topologically sorted
     orders_types: [swift, kotlin, go];
