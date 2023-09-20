@@ -249,7 +249,7 @@ impl Csharp {
             is_readonly.then(|| "readonly ").unwrap_or_default(),
             ts_ty,
             nullable.then(|| "?").unwrap_or_default(),
-            csharp_uppercase_field(&field.id.renamed)
+            &field.id.renamed
         )?;
 
         Ok(())
@@ -285,10 +285,10 @@ impl Csharp {
     }
 }
 
-fn csharp_uppercase_field(s: &str) -> String {
-    let mut c = s.chars();
-    match c.next() {
-        None => String::new(),
-        Some(f) => f.to_uppercase().collect::<String>() + c.as_str(),
-    }
-}
+// fn csharp_uppercase_field(s: &str) -> String {
+//     let mut c = s.chars();
+//     match c.next() {
+//         None => String::new(),
+//         Some(f) => f.to_uppercase().collect::<String>() + c.as_str(),
+//     }
+// }
